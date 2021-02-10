@@ -41,7 +41,7 @@ fi
 DEV=$1
 
 # check device exist
-DOWN=`ifconfig -a | grep $DEV -c`
+DOWN=$(ip link show $DEV | awk '{ print $9 }' | wc -w)
 if [ $DOWN -eq 0 ]; then
     if [ $SLNT -eq 0 ];then
 	echo "Device $DEV: NONE"
@@ -50,8 +50,8 @@ if [ $DOWN -eq 0 ]; then
 fi
 
 #check up/down status
-UP=`ifconfig | grep $DEV -c`
-if [ $UP -eq 0 ]; then #device down
+UP=$(ip link show $DEV | awk '{ print $9 }' | wc -c)
+if [ $UP -eq 6 ]; then #device down
     if [ $SLNT -eq 0 ];then
 	echo "Device $DEV: DOWN"
     fi
@@ -62,3 +62,4 @@ else
     fi
     exit 0
 fi
+
